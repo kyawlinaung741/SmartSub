@@ -273,6 +273,7 @@ export function ComposeSettings({
   dubEnabled,
   translateOn,
   translateContent,
+  forceHardSubtitle = false,
   disabled = false,
 }: {
   value: PipelineComposeConfig;
@@ -281,6 +282,7 @@ export function ComposeSettings({
   dubEnabled: boolean;
   translateOn: boolean;
   translateContent?: unknown;
+  forceHardSubtitle?: boolean;
   disabled?: boolean;
 }) {
   const { t } = useTranslation('tasks');
@@ -311,7 +313,7 @@ export function ComposeSettings({
           width={160}
           label={t('wizard.composeSubtitle')}
           value={value.subtitle}
-          disabled={disabled}
+          disabled={disabled || forceHardSubtitle}
           options={[
             { value: 'hard', label: t('wizard.composeHard') },
             { value: 'soft', label: t('wizard.composeSoft') },
