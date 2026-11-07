@@ -882,5 +882,17 @@ assertEqual(recapGraph.indexOf('boxblur=18:1') < recapGraph.indexOf("ass='/tmp/b
 assertEqual(mapTargets(recapBlurPlan.outputOptions).includes('[vout]'), true, 'Recap blur: 映射经过 blur + subtitle 的视频输出');
 assertEqual(recapBlurPlan.videoFilter, undefined, 'Recap blur: 使用 filter_complex，不与 -vf 冲突');
 
+const recapBlurMixPlan = buildComposePlan({
+  videoPath: VIDEO,
+  outputPath: '/media/recap-mix.mp4',
+  subtitle: HARD,
+  audio: { mode: 'mix', trackPath: TRACK },
+  blurBoxes: [{ x: 0.12, y: 0.2, w: 0.3, h: 0.25 }],
+  blurStrength: 24,
+});
+assertEqual(mapTargets(recapBlurMixPlan.outputOptions).includes('[mix]'), true, 'Recap blur+mix: 只映射 duck-mix 音频');
+assertEqual(mapTargets(recapBlurMixPlan.outputOptions).includes('0:a?'), false, 'Recap blur+mix: 不重复映射原始音频');
+assertEqual((recapBlurMixPlan.complexFilter || []).some((line) => line.includes('sidechaincompress')), true, 'Recap blur+mix: 保留 ducking 混音滤镜');
+
 console.log(failed === 0 ? '\n全部通过 ✅' : `\n${failed} 项断言失败 ❌`);
 process.exit(failed === 0 ? 0 : 1);
