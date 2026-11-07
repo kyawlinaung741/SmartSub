@@ -202,7 +202,7 @@ export const TTS_PROVIDER_TYPES: TtsProviderType[] = [
         type: 'text',
         required: true,
         defaultValue:
-          'zh-CN-XiaoxiaoNeural, zh-CN-YunxiNeural, zh-CN-YunyangNeural, zh-CN-XiaoyiNeural, en-US-AriaNeural, en-US-GuyNeural',
+          'my-MM-ThihaNeural, zh-CN-XiaoxiaoNeural, zh-CN-YunxiNeural, zh-CN-YunyangNeural, zh-CN-XiaoyiNeural, en-US-AriaNeural, en-US-GuyNeural',
         tips: 'ttsVoicesEdgeTips',
       },
       {
@@ -661,6 +661,10 @@ export function buildTtsInstanceFromPreset(
  * 内置 premade 音色 id → 名称映射（ElevenLabs 默认预填集合，2026-07 实测
  * 免费账号可用）：实例未拉取过账号音色时的展示兜底。
  */
+export const EDGE_TTS_VOICE_LABELS: Record<string, string> = {
+  'my-MM-ThihaNeural': 'Thiha (Myanmar)',
+};
+
 export const ELEVENLABS_PREMADE_VOICE_LABELS: Record<string, string> = {
   EXAVITQu4vr4xnSDxMaL: 'Sarah',
   JBFqnCBsd6RMkjVDRZzb: 'George',
@@ -700,6 +704,7 @@ export const VOLC_TTS_VOICE_LABELS: Record<string, string> = {
 
 /** 按类型取内置音色名映射（无在线拉取或未拉取时的展示兜底）。 */
 const BUILTIN_VOICE_LABELS_BY_TYPE: Record<string, Record<string, string>> = {
+  [TTS_EDGE]: EDGE_TTS_VOICE_LABELS,
   [TTS_ELEVENLABS]: ELEVENLABS_PREMADE_VOICE_LABELS,
   [TTS_VOLCENGINE]: VOLC_TTS_VOICE_LABELS,
 };
@@ -763,6 +768,10 @@ export function parseTtsVoices(
   }
   const seen = new Set<string>();
   const out: string[] = [];
+  // Existing Edge instances also receive the Recap app's Myanmar narrator voice.
+  if (provider?.type === TTS_EDGE && !list.includes('my-MM-ThihaNeural')) {
+    list.unshift('my-MM-ThihaNeural');
+  }
   for (const m of list) {
     if (m && !seen.has(m)) {
       seen.add(m);
