@@ -201,7 +201,7 @@ export function deriveComposeConfig(
       h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
     }));
   const blurActive = blurBoxes.length > 0;
-  const forceHardSubtitle = Boolean(compose.recapMode || blurActive);
+  const forceHardSubtitle = blurActive;
 
   let subtitle: ComposeConfig['subtitle'];
   if (compose.subtitle === 'none' && !forceHardSubtitle) {
@@ -226,7 +226,9 @@ export function deriveComposeConfig(
   // 容器：沿用源扩展名（WebM/Ogg 回落 mp4）；soft 参与强制 mkv（addTrack P2 不参与）
   const sourceExt = path.extname(file.filePath) || '.mp4';
   const ext =
-    subtitle.mode === 'soft' ? '.mkv' : writableComposeExtension(sourceExt);
+    subtitle.mode === 'soft' && !compose.recapMode
+      ? '.mkv'
+      : writableComposeExtension(sourceExt);
   const outputPath = finalOutputPath(
     file.filePath,
     ext,
