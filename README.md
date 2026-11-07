@@ -129,7 +129,8 @@ CrazyToken 提供 Claude、GPT、Gemini、Kimi、GLM、DeepSeek、Qwen、Grok �
 - 独立配音工作台：一份字幕 + 可选视频，逐条语音合成并自动对齐时间轴
 - 本地引擎离线免费：Kokoro 多语 103 音色、VITS 中文 174 音色
 - 声音克隆：本地 ZipVoice 零样本克隆（一段参考音频即建即用），也支持火山引擎声音复刻 2.0、ElevenLabs 即时克隆
-- 云端服务：Edge TTS 免费档、OpenAI 兼容端点（OpenAI / 硅基流动等）、Azure Speech、火山引擎豆包、ElevenLabs、Xiaomi MiMo
+- 云端服务：Edge TTS 免费档（内置缅甸语 `my-MM-ThihaNeural`，与 Recap App 使用相同 voice ID）、OpenAI 兼容端点（OpenAI / 硅基流动等）、Azure Speech、火山引擎豆包、ElevenLabs、Xiaomi MiMo
+- 本地配音默认采用 CPU/RAM 自适应调度，自动为系统和 FFmpeg 预留资源；当前打包的 Sherpa TTS 运行时未确认支持 CUDA，因此不会冒险强制启用 GPU。
 - 时间轴对齐：语速预控制、实测复核、静音间隙借用；超限行列入人工处理清单（改文案 / 单行重生成 / 接受变速）
 - 逐行试听、换音色、重新合成；背景音可静音原轨或压低原轨（ducking）
 - 输出纯音频（wav / mp3）、替换音轨、混音视频或 MKV 双音轨，可同时导出对齐后的字幕
