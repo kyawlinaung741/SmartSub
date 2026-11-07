@@ -407,7 +407,11 @@ eq(
     compose: {
       subtitle: 'soft',
       recapMode: true,
-      blurBoxes: [{ x: 0.1, y: 0.65, w: 0.45, h: 0.22 }],
+      blurBoxes: [
+        { x: 0.1, y: 0.65, w: 0.45, h: 0.22 },
+        { x: 0.2, y: 0.2, w: 0.95, h: 0.95 },
+        { x: -0.1, y: 0.1, w: 0.2, h: 0.2 },
+      ],
       blurStrength: 80,
       outputDirectory: '/exports/recap',
     },
@@ -419,7 +423,14 @@ eq(
     eq(derived.config.outputPath, '/exports/recap/ep5-final.mp4', 'Recap: 使用选定目录并输出 MP4');
     eq(derived.config.subtitle.mode, 'hard', 'Recap: 强制硬字幕，不能退化成 MKV 软字幕');
     eq(derived.config.audio, { mode: 'replace', trackPath: '/sess/ep5-narrator.wav' }, 'Recap: Narrator 音轨替换原声');
-    eq(derived.config.blurBoxes, [{ x: 0.1, y: 0.65, w: 0.45, h: 0.22 }], 'Recap: 保存归一化 Blur 区域');
+    eq(
+      derived.config.blurBoxes,
+      [
+        { x: 0.1, y: 0.65, w: 0.45, h: 0.22 },
+        { x: 0.2, y: 0.2, w: 0.8, h: 0.8 },
+      ],
+      'Recap: 过滤非法 Blur 区域并把超界尺寸限制在画面内',
+    );
     eq(derived.config.blurStrength, 50, 'Recap: Blur 强度限制在安全范围');
   }
 }
