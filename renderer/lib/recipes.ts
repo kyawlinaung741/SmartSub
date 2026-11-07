@@ -21,7 +21,12 @@ export const BUILTIN_RECIPES: TaskRecipe[] = [
     builtin: true,
     goals: { translate: true, dub: true, video: true },
     accepts: 'media',
-    config: { gates: { subtitle: 'manual', dubbing: 'auto' } },
+    config: {
+      sourceLanguage: 'zh',
+      targetLanguage: 'my',
+      subtitleOutputFormats: ['srt'],
+      gates: { subtitle: 'manual', dubbing: 'auto' },
+    },
   },
   {
     id: 'builtin-pipeline',
