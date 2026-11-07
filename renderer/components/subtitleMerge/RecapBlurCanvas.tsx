@@ -65,6 +65,7 @@ export default function RecapBlurCanvas({
       ref={root}
       className={`pointer-events-none absolute inset-0 z-[9] ${drawMode ? 'cursor-crosshair' : ''}`}
       data-recap-blur-canvas
+      data-testid="recap-blur-canvas"
     >
       {boxes.map((box, index) => (
         <div
@@ -167,6 +168,7 @@ export default function RecapBlurCanvas({
       {drawMode && (
         <div
           className="pointer-events-auto absolute inset-0 cursor-crosshair"
+          data-testid="recap-blur-draw-surface"
           onPointerDown={(event) => {
             if (event.button !== 0) return;
             const p = point(event);
