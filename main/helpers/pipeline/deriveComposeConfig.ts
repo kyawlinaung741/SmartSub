@@ -195,8 +195,8 @@ export function deriveComposeConfig(
       box.x < 1 && box.y < 1,
     )
     .map((box) => ({
-      x: Math.max(0, Math.min(0.999, box.x)),
-      y: Math.max(0, Math.min(0.999, box.y)),
+      x: Math.max(0, Math.min(0.985, box.x)),
+      y: Math.max(0, Math.min(0.985, box.y)),
       w: Math.max(0.015, Math.min(1 - Math.max(0, box.x), box.w)),
       h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
     }));
