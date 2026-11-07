@@ -476,6 +476,8 @@ export async function runComposeJob(
         embeddedSubtitles,
         audioCodecs: mediaInfo.audioCodecs,
         hasOriginalAudio,
+        blurBoxes: config.blurBoxes,
+        blurStrength: config.blurStrength,
       },
       planOptions,
     );
