@@ -36,7 +36,7 @@ const EDGE_OUTAGE_HINT =
 /** Convert upstream failures into actionable Burmese diagnostics. */
 export function describeEdgeTtsError(error: unknown): string {
   const detail = error instanceof Error ? error.message : String(error);
-  if (/\\b403\\b|unexpected server response:\\s*403/i.test(detail)) {
+  if (/\b403\b|unexpected server response:\s*403/i.test(detail)) {
     return `Edge TTS ဆာဗာက ချိတ်ဆက်မှုကို ငြင်းပယ်ထားပါတယ် (HTTP 403)။ ဒါဟာ API Key မှားတာလို့ မဆိုလိုပါဘူး။ Microsoft ဘက်က အခမဲ့ WebSocket လမ်းကြောင်းကို ပိတ်ထားခြင်း သို့မဟုတ် ကန့်သတ်ထားခြင်း ဖြစ်နိုင်ပါတယ်။ ${EDGE_OUTAGE_HINT}`;
   }
   return `Edge TTS ချိတ်ဆက်မှု မအောင်မြင်ပါ။ အကြောင်းရင်း: ${detail}. ${EDGE_OUTAGE_HINT}`;
