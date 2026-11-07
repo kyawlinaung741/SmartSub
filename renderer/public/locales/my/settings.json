@@ -395,5 +395,6 @@
     "loading": "Generating configuration…",
     "retry": "Retry",
     "locationHint": "Connects to this SmartSub profile’s services and tasks. No separate Node.js installation needed. Reimport after moving the app or changing profiles."
-  }
+  },
+  "burmese": "မြန်မာ"
 }
