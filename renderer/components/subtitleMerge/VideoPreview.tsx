@@ -54,6 +54,7 @@ interface VideoPreviewProps {
   onUpdateStyle?: (update: Partial<SubtitleStyle>) => void;
   softMux?: boolean;
   recapBlurBoxes?: RecapBlurBox[];
+  recapBlurStrength?: number;
   recapBlurDrawMode?: boolean;
   recapBlurSelectedIndex?: number | null;
   onRecapBlurSelect?: (index: number | null) => void;
@@ -111,6 +112,7 @@ export default function VideoPreview({
   onUpdateStyle,
   softMux = false,
   recapBlurBoxes = [],
+  recapBlurStrength = 18,
   recapBlurDrawMode = false,
   recapBlurSelectedIndex = null,
   onRecapBlurSelect,
@@ -486,6 +488,7 @@ export default function VideoPreview({
               boxes={recapBlurBoxes}
               width={box.width}
               height={box.height}
+              blurStrength={recapBlurStrength}
               drawMode={recapBlurDrawMode}
               selectedIndex={recapBlurSelectedIndex}
               onSelect={onRecapBlurSelect}
