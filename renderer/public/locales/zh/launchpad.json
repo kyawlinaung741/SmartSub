@@ -128,6 +128,8 @@
     "dubbing": "配音"
   },
   "card": {
+    "recap": "Recap 视频 → 缅甸语旁白 MP4",
+    "recapDesc": "自动提取音频、Whisper 转写、Gemini 缅甸语翻译、旁白配音、字幕编辑与区域模糊，一站式导出 MP4",
     "pipeline": "视频 → 配音成片",
     "pipelineDesc": "听写、翻译、配音、合成一条龙，默认字幕阶段人工把关（可选全自动直通）",
     "generateTranslate": "视频 → 双语字幕",
