@@ -813,6 +813,17 @@ export function setupIpcHandlers(mainWindow: BrowserWindow) {
     },
   );
 
+  // Recap final output destination: choose an existing folder without exposing filesystem APIs to the renderer.
+  ipcMain.handle('selectOutputDirectory', async () => {
+    const result = await dialog.showOpenDialog(dialogWindow(mainWindow), {
+      properties: ['openDirectory', 'createDirectory'],
+      title: 'Select Recap output folder',
+    });
+    return result.canceled || !result.filePaths[0]
+      ? null
+      : result.filePaths[0];
+  });
+
   // 选择多个文件
   ipcMain.handle(
     'selectFiles',
