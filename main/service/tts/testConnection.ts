@@ -20,9 +20,10 @@ export interface TtsTestResult {
 const TEST_TIMEOUT_MS = 20_000;
 
 /**
- * 云 TTS 实例连通性自测：真实合成一句短文本（TTS 无零成本探针，对齐 design 决策 2）。
- * 计费影响可忽略（"Hello" 5 字符）；成功即证明凭据、模型与 voice 全链路可用。
- * 返回结构对齐 ASR testConnection（ok / needsConfig / detail）。
+ * Cloud TTS connectivity probe. MiMo uses a short Burmese narration sample
+ * to check whether the configured endpoint can synthesize Burmese text.
+ * A successful response proves API connectivity and audio generation only;
+ * listening is still required to judge pronunciation and narration quality.
  */
 export async function testTtsConnection(
   provider: TtsProvider,
