@@ -39,7 +39,7 @@ keywords: [本地 TTS, Kokoro, VITS, 离线配音, 免费文字转语音, sherpa
 
 - **中英混合内容**选 Kokoro；**纯中文**且想要更多说话人选 VITS
 - 试听后再批量：工作台里逐行试听不同音色，确定后应用到全局
-- 本地合成速度取决于 CPU；批量任务自动多进程并行
+- 本地 Sherpa TTS 当前使用 CPU Provider（此版本未确认打包的原生库具备 CUDA TTS 支持，不能仅靠设置 provider='cuda' 安全启用 GPU）。高级选项的「自动」会根据可用 CPU 核心和空闲内存分配 Worker / ONNX 线程，并为系统与 FFmpeg 预留资源；ZipVoice 使用更严格的内存预算。
 
 ## 常见问题
 
