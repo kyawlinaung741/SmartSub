@@ -60,6 +60,8 @@ export interface ComposePlanInput {
   /** Original audio codecs in source stream order, supplied by the bundled media probe. */
   audioCodecs?: string[];
   hasOriginalAudio?: boolean;
+  blurBoxes?: Array<{ x: number; y: number; w: number; h: number }>;
+  blurStrength?: number;
 }
 
 /** addTrack 模式的前置步骤：配音轨预编码为 aac 临时文件（主命令全流 -c copy） */
@@ -131,6 +133,56 @@ function buildDuckMixFilters(duckRatio: number): string[] {
     `[0:a][sc]sidechaincompress=threshold=0.03:ratio=${duckRatio}:attack=20:release=300[bg]`,
     '[bg][dub]amix=inputs=2:duration=first:normalize=0[mix]',
   ];
+}
+
+/**
+ * Build a filter graph that blurs only the selected normalized rectangles.
+ * Each region is cropped, blurred, then composited back before subtitle burn-in.
+ * Invalid/empty rectangles are ignored defensively.
+ */
+export function buildRecapBlurFilters(
+  boxes: Array<{ x: number; y: number; w: number; h: number }> = [],
+  strength = 18,
+  tailFilters: string[] = [],
+): string[] {
+  const valid = boxes
+    .filter((box) =>
+      [box.x, box.y, box.w, box.h].every(Number.isFinite) &&
+      box.w > 0 && box.h > 0 &&
+      box.x < 1 && box.y < 1 &&
+      box.x + box.w > 0 && box.y + box.h > 0,
+    )
+    .map((box) => ({
+      x: Math.max(0, Math.min(0.999, box.x)),
+      y: Math.max(0, Math.min(0.999, box.y)),
+      w: Math.max(0.015, Math.min(1 - Math.max(0, box.x), box.w)),
+      h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
+    }))
+    .filter((box) => box.w > 0 && box.h > 0);
+  if (!valid.length) return [];
+  const radius = Math.max(1, Math.min(50, Math.round(Number.isFinite(strength) ? strength : 18)));
+  const splitLabels = ['[base]', ...valid.map((_, i) => `[blur-src-${i}]`)].join('');
+  const graph = [`[0:v]split=${valid.length + 1}${splitLabels}`];
+  let current = 'base';
+  valid.forEach((box, i) => {
+    const x = Math.max(0, Math.min(0.999, box.x));
+    const y = Math.max(0, Math.min(0.999, box.y));
+    const w = Math.max(0.015, Math.min(1 - x, box.w));
+    const h = Math.max(0.015, Math.min(1 - y, box.h));
+    const crop = [
+      `trunc(iw*${w.toFixed(6)}/2)*2`,
+      `trunc(ih*${h.toFixed(6)}/2)*2`,
+      `trunc(iw*${x.toFixed(6)}/2)*2`,
+      `trunc(ih*${y.toFixed(6)}/2)*2`,
+    ].join(':');
+    graph.push(`[blur-src-${i}]crop=${crop},boxblur=${radius}:1[blur-${i}]`);
+    const next = `blur-composite-${i}`;
+    graph.push(`[${current}][blur-${i}]overlay=x=trunc(iw*${x.toFixed(6)}/2)*2:y=trunc(ih*${y.toFixed(6)}/2)*2:shortest=1[${next}]`);
+    current = next;
+  });
+  const tail = tailFilters.filter(Boolean).join(',');
+  graph.push(`[${current}]${tail ? `${tail}` : 'null'}[vout]`);
+  return graph;
 }
 
 /**
@@ -217,12 +269,38 @@ export function buildComposePlan(
   const opt: string[] = [];
 
   if (subtitle.mode === 'hard') {
-    const chain = [
+    const tailFilters = [
       subtitle.filter,
       EVEN_DIMENSIONS_FILTER,
       ...(subtitle.needsNv12 ? ['format=nv12'] : []),
-    ].join(',');
-    if (audio.mode === 'mix') {
+    ];
+    const hasBlur = Boolean(input.blurBoxes?.length);
+    const chain = tailFilters.join(',');
+    if (hasBlur) {
+      // Blur is a video transform: force a re-encode and composite it before subtitles.
+      complexFilter = buildRecapBlurFilters(
+        input.blurBoxes,
+        input.blurStrength,
+        tailFilters,
+      );
+      opt.push('-map', '[vout]');
+      if (audio.mode === 'replace') opt.push('-map', '1:a');
+      else if (audio.mode === 'addTrack') opt.push('-map', '0:a?', '-map', '1:a');
+      else opt.push('-map', '0:a?');
+      opt.push(...subtitle.encoderArgs);
+      if (audio.mode === 'replace' || audio.mode === 'mix') opt.push(...AAC_ARGS);
+      else if (audio.mode === 'addTrack') opt.push('-c:a', 'copy');
+      else if (
+        input.audioCodecs === undefined &&
+        sourceAudioNeedsAac(path.extname(videoPath), extension)
+      ) opt.push(...AAC_ARGS);
+      else opt.push('-c:a', 'copy');
+      if (faststart) opt.push('-movflags', '+faststart');
+      if (audio.mode === 'mix') {
+        complexFilter.push(...buildDuckMixFilters(duckRatio));
+        opt.splice(opt.indexOf('0:a?'), 0, '-map', '[mix]');
+      }
+    } else if (audio.mode === 'mix') {
       // -vf 与 -filter_complex 不能并用：视频滤镜并入 complex 图
       complexFilter = [
         `[0:v]${chain}[vout]`,
