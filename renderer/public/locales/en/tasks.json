@@ -804,5 +804,31 @@
     "dubbingUnavailable": "The saved engine and voice are currently unavailable. Check the service settings or choose another voice.",
     "styleSnapshot": "This task uses its saved subtitle style. Select a style to update it.",
     "composeOptionsUnavailable": "Some composition options could not be loaded. Task settings were preserved. Reopen the page to retry."
+  },
+  "recapEditor": {
+    "title": "Recap video editor",
+    "description": "Draw blur regions on the preview. Drag a region to move it and use its corner handle to resize.",
+    "draw": "Draw blur box",
+    "finishDrawing": "Finish drawing",
+    "deleteSelected": "Delete selected",
+    "fontFamily": "Font family",
+    "fontSize": "Font size: {{value}}",
+    "textColor": "Text color",
+    "outlineColor": "Outline color",
+    "outlineWidth": "Outline width: {{value}}",
+    "shadow": "Shadow: {{value}}",
+    "backgroundColor": "Background color",
+    "backgroundOpacity": "Background opacity: {{value}}%",
+    "leftMargin": "Subtitle width (left margin)",
+    "rightMargin": "Subtitle width (right margin)",
+    "bold": "Bold subtitles",
+    "backgroundBox": "Subtitle background box",
+    "blurStrength": "Blur strength: {{value}}",
+    "outputFolder": "Save final MP4 to folder (blank = source video folder)",
+    "browse": "Browse…",
+    "softHint": "Soft subtitles remain selectable in the MP4, but appearance and position controls apply to hard subtitles only.",
+    "softFooter": "{{count}} blur region(s). Soft subtitles are embedded as a selectable track in the MP4. The SRT subtitle export remains available.",
+    "hardFooter": "{{count}} blur region(s). Blur is rendered before the Myanmar subtitle layer. Subtitles are burned into the final MP4. The SRT subtitle export remains available.",
+    "blurRequiresHard": "Blur regions require hard subtitles because the video must be re-encoded. Remove all blur regions to choose soft subtitles."
   }
 }
