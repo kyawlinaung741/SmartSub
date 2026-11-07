@@ -150,6 +150,11 @@ export default function RecapEditorPanel({
             onChange={(event) => patch({ bold: event.target.checked })} />
           Bold subtitles
         </label>
+        <label className="flex items-center gap-2 text-xs text-foreground">
+          <input type="checkbox" checked={style.borderStyle === 3} disabled={disabled}
+            onChange={(event) => patch({ borderStyle: event.target.checked ? 3 : 1 })} />
+          Subtitle background box
+        </label>
         <Field label={`Blur strength: ${blurStrength}`}>
           <input type="range" min="1" max="50" value={blurStrength}
             disabled={disabled} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
