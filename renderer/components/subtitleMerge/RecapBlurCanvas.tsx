@@ -11,6 +11,7 @@ interface Props {
   boxes: RecapBlurBox[];
   width: number;
   height: number;
+  blurStrength: number;
   drawMode: boolean;
   selectedIndex: number | null;
   onSelect: (index: number | null) => void;
@@ -22,6 +23,7 @@ export default function RecapBlurCanvas({
   boxes,
   width,
   height,
+  blurStrength,
   drawMode,
   selectedIndex,
   onSelect,
@@ -61,7 +63,7 @@ export default function RecapBlurCanvas({
   return (
     <div
       ref={root}
-      className={`pointer-events-none absolute inset-0 z-[11] ${drawMode ? 'cursor-crosshair' : ''}`}
+      className={`pointer-events-none absolute inset-0 z-[9] ${drawMode ? 'cursor-crosshair' : ''}`}
       data-recap-blur-canvas
     >
       {boxes.map((box, index) => (
@@ -76,6 +78,8 @@ export default function RecapBlurCanvas({
             top: `${box.y * 100}%`,
             width: `${box.w * 100}%`,
             height: `${box.h * 100}%`,
+            backdropFilter: `blur(${Math.max(1, Math.min(50, blurStrength))}px)`,
+            WebkitBackdropFilter: `blur(${Math.max(1, Math.min(50, blurStrength))}px)`,
           }}
           onPointerDown={(event) => {
             if (drawMode || event.button !== 0) return;
