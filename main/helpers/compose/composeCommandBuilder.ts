@@ -153,8 +153,8 @@ export function buildRecapBlurFilters(
       box.x + box.w > 0 && box.y + box.h > 0,
     )
     .map((box) => ({
-      x: Math.max(0, Math.min(0.999, box.x)),
-      y: Math.max(0, Math.min(0.999, box.y)),
+      x: Math.max(0, Math.min(0.985, box.x)),
+      y: Math.max(0, Math.min(0.985, box.y)),
       w: Math.max(0.015, Math.min(1 - Math.max(0, box.x), box.w)),
       h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
     }))
@@ -165,8 +165,8 @@ export function buildRecapBlurFilters(
   const graph = [`[0:v]split=${valid.length + 1}${splitLabels}`];
   let current = 'base';
   valid.forEach((box, i) => {
-    const x = Math.max(0, Math.min(0.999, box.x));
-    const y = Math.max(0, Math.min(0.999, box.y));
+    const x = Math.max(0, Math.min(0.985, box.x));
+    const y = Math.max(0, Math.min(0.985, box.y));
     const w = Math.max(0.015, Math.min(1 - x, box.w));
     const h = Math.max(0.015, Math.min(1 - y, box.h));
     const crop = [
