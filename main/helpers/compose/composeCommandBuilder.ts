@@ -175,9 +175,9 @@ export function buildRecapBlurFilters(
       `trunc(iw*${x.toFixed(6)}/2)*2`,
       `trunc(ih*${y.toFixed(6)}/2)*2`,
     ].join(':');
-    graph.push(`[blur_src_${i}]crop=${crop},boxblur=${radius}:1[blur-${i}]`);
+    graph.push(`[blur_src_${i}]crop=${crop},boxblur=${radius}:1[blur_${i}]`);
     const next = `blur_composite_${i}`;
-    graph.push(`[${current}][blur-${i}]overlay=x=trunc(main_w*${x.toFixed(6)}/2)*2:y=trunc(main_h*${y.toFixed(6)}/2)*2:shortest=1[${next}]`);
+    graph.push(`[${current}][blur_${i}]overlay=x=trunc(main_w*${x.toFixed(6)}/2)*2:y=trunc(main_h*${y.toFixed(6)}/2)*2:shortest=1[${next}]`);
     current = next;
   });
   const tail = tailFilters.filter(Boolean).join(',');
