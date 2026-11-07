@@ -16,6 +16,14 @@ export const WIZARD_DROP_KEY = 'wizard:droppedFiles';
  */
 export const BUILTIN_RECIPES: TaskRecipe[] = [
   {
+    id: 'builtin-recap',
+    name: '',
+    builtin: true,
+    goals: { translate: true, dub: true, video: true },
+    accepts: 'media',
+    config: { gates: { subtitle: 'manual', dubbing: 'auto' } },
+  },
+  {
     id: 'builtin-pipeline',
     name: '',
     builtin: true,
@@ -51,6 +59,8 @@ export const BUILTIN_RECIPES: TaskRecipe[] = [
 /** 内置配方 id → launchpad.json card.* 文案键（沿用旧卡片文案，深链习惯不破坏） */
 export function builtinCardKey(id: string): string {
   switch (id) {
+    case 'builtin-recap':
+      return 'recap';
     case 'builtin-pipeline':
       return 'pipeline';
     case 'builtin-generate-translate':
