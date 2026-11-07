@@ -2351,6 +2351,7 @@ export default function TaskWizard() {
               dubEnabled={dubOn}
               translateOn={translateOn}
               translateContent={formData?.translateContent}
+              forceHardSubtitle={isRecapRecipe && Boolean(composeConfig.blurBoxes?.length)}
               disabled={starting}
             />
             {isRecapRecipe && mediaFiles.length > 0 && (
@@ -2360,6 +2361,7 @@ export default function TaskWizard() {
                   style={composeConfig.style || initialComposeConfig(tMerge).style!}
                   blurBoxes={composeConfig.blurBoxes || []}
                   blurStrength={composeConfig.blurStrength ?? 18}
+                  softMux={composeConfig.subtitle === 'soft' && !composeConfig.blurBoxes?.length}
                   outputDirectory={composeConfig.outputDirectory || ''}
                   disabled={starting}
                   onStyleChange={(patch) =>
@@ -2372,7 +2374,11 @@ export default function TaskWizard() {
                     })
                   }
                   onBlurBoxesChange={(blurBoxes) =>
-                    updateCompose({ ...composeConfig, blurBoxes })
+                    updateCompose({
+                      ...composeConfig,
+                      blurBoxes,
+                      ...(blurBoxes.length ? { subtitle: 'hard' as const } : {}),
+                    })
                   }
                   onBlurStrengthChange={(blurStrength) =>
                     updateCompose({ ...composeConfig, blurStrength })
