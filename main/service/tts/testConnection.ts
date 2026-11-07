@@ -4,6 +4,7 @@ import fs from 'fs';
 import {
   TTS_XIAOMI_MIMO,
   isTtsProviderConfigured,
+  parseTtsVoices,
   type TtsProvider,
 } from '../../../types/ttsProvider';
 import { synthesizeSegment, defaultVoiceOf } from './index';
@@ -31,6 +32,12 @@ export async function testTtsConnection(
   }
   const voice = defaultVoiceOf(provider);
   if (!voice) return { ok: false, needsConfig: true };
+  // MiMo's official preset voices are documented for Chinese/English only.
+  // Use its English female preset when available to experimentally probe Burmese output.
+  const testVoice =
+    provider.type === TTS_XIAOMI_MIMO && parseTtsVoices(provider).includes('Mia')
+      ? 'Mia'
+      : voice;
 
   const outWavPath = path.join(
     os.tmpdir(),
@@ -40,11 +47,11 @@ export async function testTtsConnection(
     const result = await synthesizeSegment(provider, {
       text:
         provider.type === TTS_XIAOMI_MIMO
-          ? '你好'
+          ? 'မင်္ဂလာပါ။ ဒီနေ့ ကျွန်တော်တို့ရဲ့ ဇာတ်လမ်းကို စတင်ကြရအောင်။'
           : voice.startsWith('my-MM-')
             ? 'မင်္ဂလာပါ'
             : 'Hello',
-      voice,
+      voice: testVoice,
       outWavPath,
       signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
     });
