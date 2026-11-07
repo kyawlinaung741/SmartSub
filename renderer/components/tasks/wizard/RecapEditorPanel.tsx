@@ -194,7 +194,7 @@ export default function RecapEditorPanel({
         </p>
       )}
       <p className="text-xs text-muted-foreground">
-        {blurBoxes.length} blur region(s). Blur is rendered before the Myanmar subtitle layer. The subtitle is burned into the final MP4 and the normal subtitle export remains available.
+        {blurBoxes.length} blur region(s). Blur is rendered before the Myanmar subtitle layer. {softMux ? 'Soft subtitles are embedded as a selectable track in the MP4.' : 'Subtitles are burned into the final MP4.'} The SRT subtitle export remains available.
       </p>
     </section>
   );
