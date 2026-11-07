@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import VideoPreview from '../../subtitleMerge/VideoPreview';
 import type { RecapBlurBox } from '../../subtitleMerge/RecapBlurCanvas';
 import type { SubtitleStyle } from '../../../../types/subtitleMerge';
@@ -46,6 +47,7 @@ export default function RecapEditorPanel({
   onBlurStrengthChange,
   onOutputDirectoryChange,
 }: Props) {
+  const { t } = useTranslation('tasks');
   const [drawMode, setDrawMode] = useState(false);
   const [selectedBlur, setSelectedBlur] = useState<number | null>(null);
   const patch = (value: Partial<SubtitleStyle>) => {
@@ -61,9 +63,9 @@ export default function RecapEditorPanel({
     <section className="space-y-3 rounded-lg border border-border p-3" data-recap-editor>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h3 className="text-sm font-semibold">Recap video editor</h3>
+          <h3 className="text-sm font-semibold">{t('recapEditor.title')}</h3>
           <p className="text-xs text-muted-foreground">
-            Draw blur regions on the preview. Drag a region to move it and use its corner handle to resize.
+            {t('recapEditor.description')}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -73,7 +75,7 @@ export default function RecapEditorPanel({
             disabled={disabled || !videoPath}
             onClick={() => setDrawMode((value) => !value)}
           >
-            {drawMode ? 'Finish drawing' : '+ Draw blur box'}
+            {drawMode ? t('recapEditor.finishDrawing') : `+ ${t('recapEditor.draw')}`}
           </button>
           <button
             type="button"
@@ -81,7 +83,7 @@ export default function RecapEditorPanel({
             disabled={disabled || selectedBlur === null}
             onClick={removeSelected}
           >
-            Delete selected
+            {t('recapEditor.deleteSelected')}
           </button>
         </div>
       </div>
@@ -104,7 +106,7 @@ export default function RecapEditorPanel({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Field label="Font family">
+        <Field label={t('recapEditor.fontFamily')}>
           <input
             className="h-8 min-w-0 rounded-md border border-input bg-background px-2 text-sm text-foreground"
             value={style.fontName}
@@ -112,59 +114,59 @@ export default function RecapEditorPanel({
             onChange={(event) => patch({ fontName: event.target.value })}
           />
         </Field>
-        <Field label={`Font size: ${style.fontSize}`}>
+        <Field label={t('recapEditor.fontSize', { value: style.fontSize })}>
           <input type="range" min="10" max="72" value={style.fontSize}
             disabled={disabled || softMux} onChange={(event) => patch({ fontSize: Number(event.target.value) })} />
         </Field>
-        <Field label="Text color">
+        <Field label={t('recapEditor.textColor')}>
           <input type="color" value={style.primaryColor} disabled={disabled || softMux}
             onChange={(event) => patch({ primaryColor: event.target.value })} />
         </Field>
-        <Field label="Outline color">
+        <Field label={t('recapEditor.outlineColor')}>
           <input type="color" value={style.outlineColor} disabled={disabled || softMux}
             onChange={(event) => patch({ outlineColor: event.target.value })} />
         </Field>
-        <Field label={`Outline width: ${style.outline}`}>
+        <Field label={t('recapEditor.outlineWidth', { value: style.outline })}>
           <input type="range" min="0" max="10" step="0.5" value={style.outline}
             disabled={disabled || softMux} onChange={(event) => patch({ outline: Number(event.target.value) })} />
         </Field>
-        <Field label={`Shadow: ${style.shadow}`}>
+        <Field label={t('recapEditor.shadow', { value: style.shadow })}>
           <input type="range" min="0" max="10" step="0.5" value={style.shadow}
             disabled={disabled || softMux} onChange={(event) => patch({ shadow: Number(event.target.value) })} />
         </Field>
-        <Field label="Background color">
+        <Field label={t('recapEditor.backgroundColor')}>
           <input type="color" value={style.backColor} disabled={disabled || softMux}
             onChange={(event) => patch({ backColor: event.target.value })} />
         </Field>
-        <Field label={`Background opacity: ${style.backOpacity ?? 50}%`}>
+        <Field label={t('recapEditor.backgroundOpacity', { value: style.backOpacity ?? 50 })}>
           <input type="range" min="0" max="100" value={style.backOpacity ?? 50}
             disabled={disabled || softMux} onChange={(event) => patch({ backOpacity: Number(event.target.value) })} />
         </Field>
-        <Field label="Subtitle width (left margin)">
+        <Field label={t('recapEditor.leftMargin')}>
           <input type="range" min="0" max="120" value={style.marginL}
             disabled={disabled || softMux} onChange={(event) => patch({ marginL: Number(event.target.value) })} />
         </Field>
-        <Field label="Subtitle width (right margin)">
+        <Field label={t('recapEditor.rightMargin')}>
           <input type="range" min="0" max="120" value={style.marginR}
             disabled={disabled || softMux} onChange={(event) => patch({ marginR: Number(event.target.value) })} />
         </Field>
         <label className="flex items-center gap-2 text-xs text-foreground">
           <input type="checkbox" checked={style.bold} disabled={disabled || softMux}
             onChange={(event) => patch({ bold: event.target.checked })} />
-          Bold subtitles
+          {t('recapEditor.bold')}
         </label>
         <label className="flex items-center gap-2 text-xs text-foreground">
           <input type="checkbox" checked={style.borderStyle === 3} disabled={disabled || softMux}
             onChange={(event) => patch({ borderStyle: event.target.checked ? 3 : 1 })} />
-          Subtitle background box
+          {t('recapEditor.backgroundBox')}
         </label>
-        <Field label={`Blur strength: ${blurStrength}`}>
+        <Field label={t('recapEditor.blurStrength', { value: blurStrength })}>
           <input type="range" min="1" max="50" value={blurStrength}
             disabled={disabled} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
         </Field>
       </div>
 
-      <Field label="Save final MP4 to folder (blank = source video folder)">
+      <Field label={t('recapEditor.outputFolder')}>
         <div className="flex min-w-0 gap-2">
           <input
             className="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm text-foreground"
@@ -184,17 +186,17 @@ export default function RecapEditorPanel({
               }
             }}
           >
-            Browse…
+            {t('recapEditor.browse')}
           </button>
         </div>
       </Field>
       {softMux && (
         <p className="text-xs text-muted-foreground">
-          Soft subtitles remain selectable in the MP4, but appearance and position controls apply to hard subtitles only.
+          {t('recapEditor.softHint')}
         </p>
       )}
       <p className="text-xs text-muted-foreground">
-        {blurBoxes.length} blur region(s). Blur is rendered before the Myanmar subtitle layer. {softMux ? 'Soft subtitles are embedded as a selectable track in the MP4.' : 'Subtitles are burned into the final MP4.'} The SRT subtitle export remains available.
+        {softMux ? t('recapEditor.softFooter', { count: blurBoxes.length }) : t('recapEditor.hardFooter', { count: blurBoxes.length })}
       </p>
     </section>
   );
