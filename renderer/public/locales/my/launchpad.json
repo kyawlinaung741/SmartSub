@@ -128,6 +128,8 @@
     "dubbing": "Dubbing"
   },
   "card": {
+    "recap": "Recap Video → မြန်မာ Narrator MP4",
+    "recapDesc": "ဗီဒီယိုမှ အသံထုတ်ယူ၊ Whisper ဖြင့် စာသားပြောင်း၊ Gemini ဖြင့် မြန်မာဘာသာပြန်၊ Narrator အသံနှင့် စာတန်းထိုး/Blur ကို တစ်နေရာတည်းတွင် ပြင်ဆင်ပြီး MP4 ထုတ်ယူရန်",
     "pipeline": "Video → dubbed final cut",
     "pipelineDesc": "Transcribe, translate, dub and compose with subtitle quality checkpoint (or fully automatic)",
     "generateTranslate": "Video → bilingual subtitles",
