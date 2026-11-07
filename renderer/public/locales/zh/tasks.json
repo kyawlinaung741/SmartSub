@@ -804,5 +804,31 @@
     "dubbingUnavailable": "已保留原来的引擎和音色。当前不可用，请检查服务配置或选择其他音色。",
     "styleSnapshot": "使用此任务保存的字幕样式；重新选择样式后才会更新。",
     "composeOptionsUnavailable": "部分合成选项加载失败，已保留任务参数。重新打开页面可重试加载。"
+  },
+  "recapEditor": {
+    "title": "Recap 视频编辑器",
+    "description": "在预览画面上绘制模糊区域。拖动区域可移动，拖动角落手柄可调整大小。",
+    "draw": "绘制模糊框",
+    "finishDrawing": "完成绘制",
+    "deleteSelected": "删除所选区域",
+    "fontFamily": "字体",
+    "fontSize": "字号：{{value}}",
+    "textColor": "文字颜色",
+    "outlineColor": "描边颜色",
+    "outlineWidth": "描边宽度：{{value}}",
+    "shadow": "阴影：{{value}}",
+    "backgroundColor": "背景颜色",
+    "backgroundOpacity": "背景不透明度：{{value}}%",
+    "leftMargin": "字幕宽度（左边距）",
+    "rightMargin": "字幕宽度（右边距）",
+    "bold": "字幕加粗",
+    "backgroundBox": "字幕背景框",
+    "blurStrength": "模糊强度：{{value}}",
+    "outputFolder": "最终 MP4 保存目录（留空则使用源视频目录）",
+    "browse": "浏览…",
+    "softHint": "软字幕会作为可切换轨道嵌入 MP4；外观和位置设置仅适用于硬字幕。",
+    "softFooter": "共 {{count}} 个模糊区域。软字幕将作为可切换轨道嵌入 MP4，并保留 SRT 导出。",
+    "hardFooter": "共 {{count}} 个模糊区域。模糊处理先于缅甸语字幕渲染；字幕将烧录到最终 MP4，并保留 SRT 导出。",
+    "blurRequiresHard": "模糊区域需要重新编码视频，因此必须使用硬字幕。删除所有模糊区域后即可选择软字幕。"
   }
 }
