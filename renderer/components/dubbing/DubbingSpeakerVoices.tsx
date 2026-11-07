@@ -6,6 +6,7 @@ import {
   Volume2,
   ListMusic,
   Square,
+  Mic2,
 } from 'lucide-react';
 import { useTranslation } from 'next-i18next';
 import { Button } from '@/components/ui/button';
@@ -130,6 +131,16 @@ export default function DubbingSpeakerVoices({
       dub.stopPreview();
     };
   }, [dub.session?.sessionId, activeEngine?.key]);
+  const applyNarratorVoice = async () => {
+    if (!activeVoice || disabled) return;
+    // Apply the selected global voice to every detected speaker in sequence;
+    // the speaker mutation endpoint intentionally serializes updates.
+    for (const speaker of speakers) {
+      const ok = await setSpeakerVoice(speaker.id, DUBBING_GLOBAL_VOICE_ID);
+      if (!ok) break;
+    }
+  };
+
   const auditionCast = async () => {
     const revision = ++auditionRevision.current;
     if (auditioning) {
@@ -168,9 +179,20 @@ export default function DubbingSpeakerVoices({
       aria-label={t('speakerVoicesTitle')}
       className="min-w-0 shrink-0 bg-muted/40 px-2 py-2"
     >
-      <div className="mb-2 flex items-center justify-between gap-2">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <p className="text-xs font-medium">{t('speakerVoicesTitle')}</p>
-        <Button
+        <div className="flex flex-wrap items-center gap-1">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 gap-1 text-xs"
+            disabled={disabled || !activeVoice || speakers.length === 0}
+            onClick={() => void applyNarratorVoice()}
+          >
+            <Mic2 className="h-3 w-3" />
+            {t('applyNarratorVoice')}
+          </Button>
+          <Button
           variant="ghost"
           size="sm"
           className="h-6 gap-1 text-xs"
@@ -188,7 +210,8 @@ export default function DubbingSpeakerVoices({
             <ListMusic className="h-3 w-3" />
           )}
           {auditioning ? t('stopPreview') : t('previewCast')}
-        </Button>
+          </Button>
+        </div>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {speakers.map((speaker) => {
