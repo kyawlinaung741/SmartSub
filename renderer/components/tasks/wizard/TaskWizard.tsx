@@ -870,6 +870,8 @@ export default function TaskWizard() {
       blurBoxes: composeConfig.blurBoxes || [],
       blurStrength: composeConfig.blurStrength ?? 18,
       outputDirectory: composeConfig.outputDirectory || '',
+      recapMode: true,
+      subtitle: 'hard',
     };
   };
 
