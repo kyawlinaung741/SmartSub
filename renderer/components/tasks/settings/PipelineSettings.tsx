@@ -245,6 +245,11 @@ export function DubbingSettings({
           }
         />
       </SettingsFields>
+      {forceHardSubtitle && (
+        <p className="px-1 text-xs text-muted-foreground">
+          Blur regions require hard subtitles because the video must be re-encoded. Remove all blur regions to choose soft subtitles.
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1 px-1">
         {key && (!engine?.ready || !voice) && (
           <p role="status" className="text-xs text-warning">
