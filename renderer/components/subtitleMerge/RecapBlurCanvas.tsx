@@ -192,17 +192,19 @@ export default function RecapBlurCanvas({
             const active = drawing.current;
             if (!active || active.pointerId !== event.pointerId) return;
             const p = point(event);
-            if (p) {
+            if (
+              p &&
+              Math.abs(p.x - active.x) >= 0.015 &&
+              Math.abs(p.y - active.y) >= 0.015
+            ) {
               const box = clamp({
                 x: Math.min(active.x, p.x),
                 y: Math.min(active.y, p.y),
                 w: Math.abs(p.x - active.x),
                 h: Math.abs(p.y - active.y),
               });
-              if (box.w >= 0.015 && box.h >= 0.015) {
-                onChange([...boxes, box]);
-                onSelect(boxes.length);
-              }
+              onChange([...boxes, box]);
+              onSelect(boxes.length);
             }
             drawing.current = null;
             setDraft(null);
