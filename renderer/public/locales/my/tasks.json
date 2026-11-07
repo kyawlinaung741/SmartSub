@@ -804,5 +804,31 @@
     "dubbingUnavailable": "The saved engine and voice are currently unavailable. Check the service settings or choose another voice.",
     "styleSnapshot": "This task uses its saved subtitle style. Select a style to update it.",
     "composeOptionsUnavailable": "Some composition options could not be loaded. Task settings were preserved. Reopen the page to retry."
+  },
+  "recapEditor": {
+    "title": "Recap ဗီဒီယို တည်းဖြတ်ရန်",
+    "description": "Preview ပေါ်တွင် Blur ဧရိယာများကို ဆွဲသတ်မှတ်ပါ။ ဧရိယာကို ဆွဲရွှေ့နိုင်ပြီး ထောင့်လက်ကိုင်မှ အရွယ်အစားပြောင်းနိုင်သည်။",
+    "draw": "Blur Box ဆွဲရန်",
+    "finishDrawing": "ဆွဲခြင်းပြီးဆုံး",
+    "deleteSelected": "ရွေးထားသော Box ဖျက်ရန်",
+    "fontFamily": "စာလုံးပုံစံ",
+    "fontSize": "စာလုံးအရွယ်: {{value}}",
+    "textColor": "စာသားအရောင်",
+    "outlineColor": "စာသားအနားသတ်အရောင်",
+    "outlineWidth": "အနားသတ်အထူ: {{value}}",
+    "shadow": "အရိပ်: {{value}}",
+    "backgroundColor": "နောက်ခံအရောင်",
+    "backgroundOpacity": "နောက်ခံအလင်းပိတ်မှု: {{value}}%",
+    "leftMargin": "စာတန်းအကျယ် (ဘယ်ဘက်အနား)",
+    "rightMargin": "စာတန်းအကျယ် (ညာဘက်အနား)",
+    "bold": "စာတန်းကို အထူစာလုံးထားရန်",
+    "backgroundBox": "စာတန်းနောက်ခံအကွက်",
+    "blurStrength": "Blur အား: {{value}}",
+    "outputFolder": "နောက်ဆုံး MP4 သိမ်းမည့် Folder (အလွတ်ထားလျှင် မူရင်းဗီဒီယို Folder)",
+    "browse": "ရွေးချယ်ရန်…",
+    "softHint": "Soft Subtitle ကို MP4 ထဲတွင် ဖွင့်/ပိတ်နိုင်သော စာတန်းအဖြစ် ထည့်မည်။ စာတန်းပုံစံနှင့် နေရာပြင်ဆင်မှုများသည် Hard Subtitle အတွက်သာ သက်ရောက်သည်။",
+    "softFooter": "Blur ဧရိယာ {{count}} ခု။ Soft Subtitle ကို MP4 ထဲတွင် ဖွင့်/ပိတ်နိုင်သော track အဖြစ် ထည့်မည်။ SRT ဖိုင်လည်း သီးခြားထုတ်ပေးမည်။",
+    "hardFooter": "Blur ဧရိယာ {{count}} ခု။ Blur ကို မြန်မာစာတန်းမထည့်မီ အရင်အသုံးပြုမည်။ စာတန်းကို MP4 ထဲတွင် တိုက်ရိုက်ထည့်မည်။ SRT ဖိုင်လည်း သီးခြားထုတ်ပေးမည်။",
+    "blurRequiresHard": "Blur ဧရိယာရှိနေသည့်အခါ ဗီဒီယိုကို ပြန် encode လုပ်ရသောကြောင့် Hard Subtitle ကို အသုံးပြုမည်။ Soft Subtitle ရွေးရန် Blur ဧရိယာအားလုံးကို ဖျက်ပါ။"
   }
 }
