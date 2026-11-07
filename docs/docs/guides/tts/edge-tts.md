@@ -30,10 +30,16 @@ Edge 免费通道不承诺可用性。断供时请切换到[本地 Kokoro / VITS
 
 | 字段              | 填写                                                                                                                                                |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 音色候选          | 输入微软 Neural 音色名回车添加，如 `zh-CN-XiaoxiaoNeural`、`zh-CN-YunxiNeural`、`en-US-AriaNeural`（与 Azure 同一命名体系，完整清单见微软语音文档） |
+| 音色候选          | 默认包含 `my-MM-ThihaNeural`（Thiha，缅甸语男声；与 Recap App 使用同一 voice ID），也可添加 `zh-CN-XiaoxiaoNeural`、`en-US-AriaNeural` 等微软 Neural 音色 |
 | 请求超时 / 并发数 | 默认即可；失败率高时降低并发                                                                                                                        |
 
 点「**测试连接**」（会真实合成一句 "Hello"）验证后即可使用。
+
+## 缅甸语音色
+
+| 音色 | 说明 |
+| --- | --- |
+| `my-MM-ThihaNeural` | Thiha（缅甸语；与 Recap App 使用相同 voice ID） |
 
 ## 常用中文音色
 
