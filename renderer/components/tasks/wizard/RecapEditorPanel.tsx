@@ -10,6 +10,7 @@ interface Props {
   blurStrength: number;
   outputDirectory?: string;
   disabled?: boolean;
+  softMux?: boolean;
   onStyleChange: (patch: Partial<SubtitleStyle>) => void;
   onBlurBoxesChange: (boxes: RecapBlurBox[]) => void;
   onBlurStrengthChange: (value: number) => void;
@@ -39,6 +40,7 @@ export default function RecapEditorPanel({
   blurStrength,
   outputDirectory = '',
   disabled = false,
+  softMux = false,
   onStyleChange,
   onBlurBoxesChange,
   onBlurStrengthChange,
@@ -89,6 +91,7 @@ export default function RecapEditorPanel({
           videoPath={videoPath}
           videoInfo={null}
           style={style}
+          softMux={softMux}
           sampleText="မြန်မာဘာသာ စာတန်းထိုးနမူနာ"
           onUpdateStyle={patch}
           recapBlurBoxes={blurBoxes}
@@ -105,59 +108,59 @@ export default function RecapEditorPanel({
           <input
             className="h-8 min-w-0 rounded-md border border-input bg-background px-2 text-sm text-foreground"
             value={style.fontName}
-            disabled={disabled}
+            disabled={disabled || softMux}
             onChange={(event) => patch({ fontName: event.target.value })}
           />
         </Field>
         <Field label={`Font size: ${style.fontSize}`}>
           <input type="range" min="10" max="72" value={style.fontSize}
-            disabled={disabled} onChange={(event) => patch({ fontSize: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ fontSize: Number(event.target.value) })} />
         </Field>
         <Field label="Text color">
-          <input type="color" value={style.primaryColor} disabled={disabled}
+          <input type="color" value={style.primaryColor} disabled={disabled || softMux}
             onChange={(event) => patch({ primaryColor: event.target.value })} />
         </Field>
         <Field label="Outline color">
-          <input type="color" value={style.outlineColor} disabled={disabled}
+          <input type="color" value={style.outlineColor} disabled={disabled || softMux}
             onChange={(event) => patch({ outlineColor: event.target.value })} />
         </Field>
         <Field label={`Outline width: ${style.outline}`}>
           <input type="range" min="0" max="10" step="0.5" value={style.outline}
-            disabled={disabled} onChange={(event) => patch({ outline: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ outline: Number(event.target.value) })} />
         </Field>
         <Field label={`Shadow: ${style.shadow}`}>
           <input type="range" min="0" max="10" step="0.5" value={style.shadow}
-            disabled={disabled} onChange={(event) => patch({ shadow: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ shadow: Number(event.target.value) })} />
         </Field>
         <Field label="Background color">
-          <input type="color" value={style.backColor} disabled={disabled}
+          <input type="color" value={style.backColor} disabled={disabled || softMux}
             onChange={(event) => patch({ backColor: event.target.value })} />
         </Field>
         <Field label={`Background opacity: ${style.backOpacity ?? 50}%`}>
           <input type="range" min="0" max="100" value={style.backOpacity ?? 50}
-            disabled={disabled} onChange={(event) => patch({ backOpacity: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ backOpacity: Number(event.target.value) })} />
         </Field>
         <Field label="Subtitle width (left margin)">
           <input type="range" min="0" max="120" value={style.marginL}
-            disabled={disabled} onChange={(event) => patch({ marginL: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ marginL: Number(event.target.value) })} />
         </Field>
         <Field label="Subtitle width (right margin)">
           <input type="range" min="0" max="120" value={style.marginR}
-            disabled={disabled} onChange={(event) => patch({ marginR: Number(event.target.value) })} />
+            disabled={disabled || softMux} onChange={(event) => patch({ marginR: Number(event.target.value) })} />
         </Field>
         <label className="flex items-center gap-2 text-xs text-foreground">
-          <input type="checkbox" checked={style.bold} disabled={disabled}
+          <input type="checkbox" checked={style.bold} disabled={disabled || softMux}
             onChange={(event) => patch({ bold: event.target.checked })} />
           Bold subtitles
         </label>
         <label className="flex items-center gap-2 text-xs text-foreground">
-          <input type="checkbox" checked={style.borderStyle === 3} disabled={disabled}
+          <input type="checkbox" checked={style.borderStyle === 3} disabled={disabled || softMux}
             onChange={(event) => patch({ borderStyle: event.target.checked ? 3 : 1 })} />
           Subtitle background box
         </label>
         <Field label={`Blur strength: ${blurStrength}`}>
           <input type="range" min="1" max="50" value={blurStrength}
-            disabled={disabled} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
+            disabled={disabled || softMux} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
         </Field>
       </div>
 
@@ -185,6 +188,11 @@ export default function RecapEditorPanel({
           </button>
         </div>
       </Field>
+      {softMux && (
+        <p className="text-xs text-muted-foreground">
+          Soft subtitles remain selectable in the MP4, but appearance and position controls apply to hard subtitles only.
+        </p>
+      )}
       <p className="text-xs text-muted-foreground">
         {blurBoxes.length} blur region(s). Blur is rendered before the Myanmar subtitle layer. The subtitle is burned into the final MP4 and the normal subtitle export remains available.
       </p>
