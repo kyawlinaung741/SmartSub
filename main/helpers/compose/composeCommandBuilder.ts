@@ -274,15 +274,16 @@ export function buildComposePlan(
       EVEN_DIMENSIONS_FILTER,
       ...(subtitle.needsNv12 ? ['format=nv12'] : []),
     ];
-    const hasBlur = Boolean(input.blurBoxes?.length);
+    const blurGraph = buildRecapBlurFilters(
+      input.blurBoxes,
+      input.blurStrength,
+      tailFilters,
+    );
+    const hasBlur = blurGraph.length > 0;
     const chain = tailFilters.join(',');
     if (hasBlur) {
       // Blur is a video transform: force a re-encode and composite it before subtitles.
-      complexFilter = buildRecapBlurFilters(
-        input.blurBoxes,
-        input.blurStrength,
-        tailFilters,
-      );
+      complexFilter = blurGraph;
       opt.push('-map', '[vout]');
       if (audio.mode === 'replace') opt.push('-map', '1:a');
       else if (audio.mode === 'addTrack') opt.push('-map', '0:a?', '-map', '1:a');
