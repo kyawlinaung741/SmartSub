@@ -124,6 +124,7 @@
   "seekToCue": "跳转到该行时间",
   "voiceGlobal": "跟随全局",
   "speakerVoicesTitle": "角色与音色",
+  "applyNarratorVoice": "所有角色使用同一个旁白音色",
   "speakerVoicesDesc": "为每个角色选择一次音色；单句仍可单独覆盖。",
   "speakerCueStats": "{{count}} 句 · {{duration}}",
   "speakerVoiceFor": "为{{name}}选择音色",
