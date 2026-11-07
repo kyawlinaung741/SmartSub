@@ -254,6 +254,12 @@ export interface PipelineDubConfig {
 export interface PipelineComposeConfig {
   /** 字幕并入方式（默认 hard 烧录；none 仅换配音轨，要求配音阶段开启） */
   subtitle: 'hard' | 'soft' | 'none';
+  /** Recap editor: normalized blur regions in source-frame coordinates (0..1). */
+  blurBoxes?: Array<{ x: number; y: number; w: number; h: number }>;
+  /** Recap editor: FFmpeg boxblur radius, clamped by the compose layer. */
+  blurStrength?: number;
+  /** Optional user-selected destination folder for Recap output. */
+  outputDirectory?: string;
   /** 烧录样式来源预设 id（系统预设或用户样式；UI 展示与配方回填用） */
   styleId?: string;
   /** 样式显示名快照（任务详情/最近任务展示，不随预设改名变化） */
