@@ -201,9 +201,10 @@ export function deriveComposeConfig(
       h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
     }));
   const blurActive = blurBoxes.length > 0;
+  const forceHardSubtitle = Boolean(compose.recapMode || blurActive);
 
   let subtitle: ComposeConfig['subtitle'];
-  if (compose.subtitle === 'none' && !blurActive) {
+  if (compose.subtitle === 'none' && !forceHardSubtitle) {
     if (!dubbedTrack) return { ok: false, reason: 'none-without-dub' };
     subtitle = { mode: 'none' };
   } else {
@@ -211,7 +212,7 @@ export function deriveComposeConfig(
     if (!subtitlePath) return { ok: false, reason: 'no-subtitle' };
     // Region blur requires video re-encoding; soft subtitles cannot carry video filters.
     subtitle =
-      compose.subtitle === 'soft' && !blurActive
+      compose.subtitle === 'soft' && !forceHardSubtitle
         ? { mode: 'soft', subtitlePath }
         : {
             mode: 'hard',
