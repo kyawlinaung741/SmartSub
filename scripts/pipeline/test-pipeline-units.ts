@@ -395,6 +395,35 @@ eq(
   '矩阵推导: 无可用字幕 → 错误',
 );
 
+// ── Recap mode: force MP4 hard subtitles, region blur and selected destination ─
+{
+  const derived = deriveComposeConfig({
+    file: {
+      filePath: '/v/ep5.mp4',
+      fileExtension: '.mp4',
+      dubbedTrackPath: '/sess/ep5-narrator.wav',
+      translatedSrtFile: '/v/ep5.my.srt',
+    } as any,
+    compose: {
+      subtitle: 'soft',
+      recapMode: true,
+      blurBoxes: [{ x: 0.1, y: 0.65, w: 0.45, h: 0.22 }],
+      blurStrength: 80,
+      outputDirectory: '/exports/recap',
+    },
+    style: STYLE,
+    exists: existsIn(['/sess/ep5-narrator.wav', '/v/ep5.my.srt']),
+  });
+  eq(derived.ok, true, 'Recap: 配音/字幕/成片设置可推导');
+  if (derived.ok) {
+    eq(derived.config.outputPath, '/exports/recap/ep5-final.mp4', 'Recap: 使用选定目录并输出 MP4');
+    eq(derived.config.subtitle.mode, 'hard', 'Recap: 强制硬字幕，不能退化成 MKV 软字幕');
+    eq(derived.config.audio, { mode: 'replace', trackPath: '/sess/ep5-narrator.wav' }, 'Recap: Narrator 音轨替换原声');
+    eq(derived.config.blurBoxes, [{ x: 0.1, y: 0.65, w: 0.45, h: 0.22 }], 'Recap: 保存归一化 Blur 区域');
+    eq(derived.config.blurStrength, 50, 'Recap: Blur 强度限制在安全范围');
+  }
+}
+
 // ── resolveComposeRunOptions：任务快照 → 合成偏好 → 默认 的三级回退 ─────────
 
 {
