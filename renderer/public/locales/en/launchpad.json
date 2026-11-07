@@ -128,6 +128,8 @@
     "dubbing": "Dubbing"
   },
   "card": {
+    "recap": "Recap video → Myanmar narrator MP4",
+    "recapDesc": "Extract audio, transcribe with Whisper, translate with Gemini, add narrator audio, edit subtitles and blur regions, then export MP4",
     "pipeline": "Video → dubbed final cut",
     "pipelineDesc": "Transcribe, translate, dub and compose with subtitle quality checkpoint (or fully automatic)",
     "generateTranslate": "Video → bilingual subtitles",
