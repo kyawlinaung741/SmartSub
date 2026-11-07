@@ -22,7 +22,7 @@ export const DEFAULT_DUBBING_PREFERENCES: PersistedDubbingConfig = {
   voice: '',
   globalSpeed: 1,
   cloneQuality: 'standard',
-  localConcurrency: 1,
+  localConcurrency: 0,
   background: 'mute',
   output: 'replaceTrack',
   audioFormat: 'wav',
