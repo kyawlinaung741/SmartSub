@@ -862,5 +862,25 @@ for (const subtitle of [
   }
 }
 
+// ── Recap 多区域 Blur：必须先模糊，再烧录字幕 ─────────────────────────────
+const recapBlurPlan = buildComposePlan({
+  videoPath: VIDEO,
+  outputPath: '/media/recap.mp4',
+  subtitle: HARD,
+  audio: { mode: 'replace', trackPath: TRACK },
+  blurBoxes: [
+    { x: 0.1, y: 0.7, w: 0.4, h: 0.2 },
+    { x: 0.6, y: 0.1, w: 0.25, h: 0.2 },
+  ],
+  blurStrength: 18,
+});
+const recapGraph = (recapBlurPlan.complexFilter || []).join(';');
+assertEqual(recapGraph.includes('split=3'), true, 'Recap blur: 为两个区域拆分视频流');
+assertEqual((recapGraph.match(/boxblur=18:1/g) || []).length, 2, 'Recap blur: 两个区域分别应用 blur');
+assertEqual((recapGraph.match(/overlay=/g) || []).length, 2, 'Recap blur: 两个区域分别合成回原画面');
+assertEqual(recapGraph.indexOf('boxblur=18:1') < recapGraph.indexOf("ass='/tmp/burn.ass'"), true, 'Recap blur: blur 必须在字幕烧录之前');
+assertEqual(mapTargets(recapBlurPlan.outputOptions).includes('[vout]'), true, 'Recap blur: 映射经过 blur + subtitle 的视频输出');
+assertEqual(recapBlurPlan.videoFilter, undefined, 'Recap blur: 使用 filter_complex，不与 -vf 冲突');
+
 console.log(failed === 0 ? '\n全部通过 ✅' : `\n${failed} 项断言失败 ❌`);
 process.exit(failed === 0 ? 0 : 1);
