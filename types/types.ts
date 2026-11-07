@@ -258,6 +258,8 @@ export interface PipelineComposeConfig {
   blurBoxes?: Array<{ x: number; y: number; w: number; h: number }>;
   /** Recap editor: FFmpeg boxblur radius, clamped by the compose layer. */
   blurStrength?: number;
+  /** Recap recipe marker: final video must be a hard-subtitled MP4. */
+  recapMode?: boolean;
   /** Optional user-selected destination folder for Recap output. */
   outputDirectory?: string;
   /** 烧录样式来源预设 id（系统预设或用户样式；UI 展示与配方回填用） */
