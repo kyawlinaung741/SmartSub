@@ -111,8 +111,11 @@ export function finalOutputPath(
   videoPath: string,
   ext: string,
   exists: (p: string) => boolean,
+  outputDirectory?: string,
 ): string {
-  const dir = path.dirname(videoPath);
+  const dir = outputDirectory?.trim()
+    ? path.resolve(outputDirectory)
+    : path.dirname(videoPath);
   const stem = path.basename(videoPath, path.extname(videoPath));
   let candidate = path.join(dir, `${stem}-final${ext}`);
   let n = 2;
@@ -185,15 +188,30 @@ export function deriveComposeConfig(
     ? { mode: 'replace', trackPath: dubbedTrack }
     : { mode: 'keep' };
 
+  const blurBoxes = (compose.blurBoxes || [])
+    .filter((box) =>
+      [box.x, box.y, box.w, box.h].every(Number.isFinite) &&
+      box.x >= 0 && box.y >= 0 && box.w > 0 && box.h > 0 &&
+      box.x < 1 && box.y < 1,
+    )
+    .map((box) => ({
+      x: Math.max(0, Math.min(0.999, box.x)),
+      y: Math.max(0, Math.min(0.999, box.y)),
+      w: Math.max(0.015, Math.min(1 - Math.max(0, box.x), box.w)),
+      h: Math.max(0.015, Math.min(1 - Math.max(0, box.y), box.h)),
+    }));
+  const blurActive = blurBoxes.length > 0;
+
   let subtitle: ComposeConfig['subtitle'];
-  if (compose.subtitle === 'none') {
+  if (compose.subtitle === 'none' && !blurActive) {
     if (!dubbedTrack) return { ok: false, reason: 'none-without-dub' };
     subtitle = { mode: 'none' };
   } else {
     const subtitlePath = pickComposeSubtitle(file, exists, false);
     if (!subtitlePath) return { ok: false, reason: 'no-subtitle' };
+    // Region blur requires video re-encoding; soft subtitles cannot carry video filters.
     subtitle =
-      compose.subtitle === 'soft'
+      compose.subtitle === 'soft' && !blurActive
         ? { mode: 'soft', subtitlePath }
         : {
             mode: 'hard',
@@ -208,10 +226,29 @@ export function deriveComposeConfig(
   const sourceExt = path.extname(file.filePath) || '.mp4';
   const ext =
     subtitle.mode === 'soft' ? '.mkv' : writableComposeExtension(sourceExt);
-  const outputPath = finalOutputPath(file.filePath, ext, exists);
+  const outputPath = finalOutputPath(
+    file.filePath,
+    ext,
+    exists,
+    compose.outputDirectory,
+  );
 
   return {
     ok: true,
-    config: { videoPath: file.filePath, outputPath, subtitle, audio },
+    config: {
+      videoPath: file.filePath,
+      outputPath,
+      subtitle,
+      audio,
+      ...(blurActive
+        ? {
+            blurBoxes,
+            blurStrength: Math.max(
+              1,
+              Math.min(50, Math.round(compose.blurStrength ?? 18)),
+            ),
+          }
+        : {}),
+    },
   };
 }
