@@ -867,6 +867,7 @@ export default function TaskWizard() {
     if (!isRecapRecipe) return resolved;
     return {
       ...resolved,
+      ...(composeConfig.blurBoxes?.length ? { subtitle: 'hard' as const } : {}),
       blurBoxes: composeConfig.blurBoxes || [],
       blurStrength: composeConfig.blurStrength ?? 18,
       outputDirectory: composeConfig.outputDirectory || '',
@@ -2345,7 +2346,11 @@ export default function TaskWizard() {
           <PanelHeader title={t('wizard.composeConfigTitle')} />
           <div className="p-3">
             <ComposeSettings
-              value={composeConfig}
+              value={
+                isRecapRecipe && composeConfig.blurBoxes?.length
+                  ? { ...composeConfig, subtitle: 'hard' }
+                  : composeConfig
+              }
               onChange={updateCompose}
               options={composeOptions}
               dubEnabled={dubOn}
