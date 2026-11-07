@@ -336,7 +336,7 @@ export default function DubbingConfigPanel({ dub }: { dub: UseDubbingReturn }) {
                 {t('localConcurrency')}
               </label>
               <Select
-                value={String(config.localConcurrency ?? 1)}
+                value={String(config.localConcurrency ?? 0)}
                 onValueChange={(v) =>
                   updateConfig({ localConcurrency: Number(v) })
                 }
@@ -346,12 +346,13 @@ export default function DubbingConfigPanel({ dub }: { dub: UseDubbingReturn }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="0">{t('localConcurrencyAuto')}</SelectItem>
                   <SelectItem value="1">{t('localConcurrency1')}</SelectItem>
                   <SelectItem value="2">2</SelectItem>
                   <SelectItem value="3">3</SelectItem>
                 </SelectContent>
               </Select>
-              {(config.localConcurrency ?? 1) > 1 && (
+              {((config.localConcurrency ?? 0) === 0 || (config.localConcurrency ?? 0) > 1) && (
                 <p className="text-xs text-muted-foreground">
                   {t('localConcurrencyHint')}
                 </p>
