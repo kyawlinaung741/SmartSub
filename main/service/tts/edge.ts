@@ -31,7 +31,16 @@ export function speedToEdgeRate(speed: number | undefined): string {
 
 /** 断供类错误的引导文案（拼在原始错误后，UI 直接展示）。 */
 const EDGE_OUTAGE_HINT =
-  'Edge TTS 免费通道不可用（逆向接口可能已变更或被限制）。该通道不承诺可用性，建议切换本地模型或 OpenAI 兼容服务商。';
+  'Edge TTS အခမဲ့အွန်လိုင်းဝန်ဆောင်မှုကို လက်ရှိအသုံးပြုမရနိုင်ပါ။ ဒီဝန်ဆောင်မှုမှာ အမြဲတမ်းအသုံးပြုနိုင်မယ်လို့ အာမခံမရှိပါ။ Local TTS သို့မဟုတ် OpenAI-compatible TTS ဝန်ဆောင်မှုကို ရွေးချယ်ပါ။';
+
+/** Convert upstream failures into actionable Burmese diagnostics. */
+export function describeEdgeTtsError(error: unknown): string {
+  const detail = error instanceof Error ? error.message : String(error);
+  if (/\\b403\\b|unexpected server response:\\s*403/i.test(detail)) {
+    return `Edge TTS ဆာဗာက ချိတ်ဆက်မှုကို ငြင်းပယ်ထားပါတယ် (HTTP 403)။ ဒါဟာ API Key မှားတာလို့ မဆိုလိုပါဘူး။ Microsoft ဘက်က အခမဲ့ WebSocket လမ်းကြောင်းကို ပိတ်ထားခြင်း သို့မဟုတ် ကန့်သတ်ထားခြင်း ဖြစ်နိုင်ပါတယ်။ ${EDGE_OUTAGE_HINT}`;
+  }
+  return `Edge TTS ချိတ်ဆက်မှု မအောင်မြင်ပါ။ အကြောင်းရင်း: ${detail}. ${EDGE_OUTAGE_HINT}`;
+}
 
 function toPositiveNumber(value: unknown, fallback: number): number {
   const n = Number(value);
@@ -108,7 +117,7 @@ function synthesizeEdgeMp3(
         finish(() =>
           reject(
             new Error(
-              `Edge TTS 请求超时（${timeoutMs / 1000}s）。${EDGE_OUTAGE_HINT}`,
+              `Edge TTS ချိတ်ဆက်မှု အချိန်ကုန်သွားပါတယ် (${timeoutMs / 1000} စက္ကန့်)။ ${EDGE_OUTAGE_HINT}`,
             ),
           ),
         ),
@@ -148,7 +157,7 @@ function synthesizeEdgeMp3(
         finish(() => {
           const buf = Buffer.concat(chunks);
           if (buf.length === 0) {
-            reject(new Error(`Edge TTS 返回空音频。${EDGE_OUTAGE_HINT}`));
+            reject(new Error(`Edge TTS မှ အသံဖိုင်အလွတ် ပြန်လာပါတယ်။ ${EDGE_OUTAGE_HINT}`));
           } else {
             resolve(buf);
           }
@@ -157,7 +166,7 @@ function synthesizeEdgeMp3(
       audioStream.on('error', (e: Error) =>
         finish(() =>
           reject(
-            new Error(`Edge TTS 流错误：${e.message}。${EDGE_OUTAGE_HINT}`),
+            new Error(describeEdgeTtsError(e)),
           ),
         ),
       );
@@ -165,7 +174,7 @@ function synthesizeEdgeMp3(
       finish(() =>
         reject(
           new Error(
-            `Edge TTS 连接失败：${e instanceof Error ? e.message : String(e)}。${EDGE_OUTAGE_HINT}`,
+            describeEdgeTtsError(e),
           ),
         ),
       ),
