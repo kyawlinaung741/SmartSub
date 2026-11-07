@@ -287,6 +287,7 @@ export function buildComposePlan(
       opt.push('-map', '[vout]');
       if (audio.mode === 'replace') opt.push('-map', '1:a');
       else if (audio.mode === 'addTrack') opt.push('-map', '0:a?', '-map', '1:a');
+      else if (audio.mode === 'mix') opt.push('-map', '[mix]');
       else opt.push('-map', '0:a?');
       opt.push(...subtitle.encoderArgs);
       if (audio.mode === 'replace' || audio.mode === 'mix') opt.push(...AAC_ARGS);
@@ -299,7 +300,6 @@ export function buildComposePlan(
       if (faststart) opt.push('-movflags', '+faststart');
       if (audio.mode === 'mix') {
         complexFilter.push(...buildDuckMixFilters(duckRatio));
-        opt.splice(opt.indexOf('0:a?'), 0, '-map', '[mix]');
       }
     } else if (audio.mode === 'mix') {
       // -vf 与 -filter_complex 不能并用：视频滤镜并入 complex 图
