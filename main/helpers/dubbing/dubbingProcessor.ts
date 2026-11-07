@@ -92,6 +92,7 @@ import {
   resolveTtsVoiceSid,
 } from '../ttsModelCatalog';
 import { getSherpaTtsRuntime } from '../sherpaOnnx/ttsRuntime';
+import { resolveLocalTtsResourcePlan } from './localTtsResources';
 import { getTtsProviderById } from '../ttsProviderManager';
 import { synthesizeSegment } from '../../service/tts';
 import { getCloudProviderGate } from '../engines/cloudProviderGate';
@@ -724,14 +725,20 @@ function buildEngineAdapter(
         `本地模型 ${spec.displayName} 未安装，请先在「配音服务」页下载`,
       );
     }
-    const model = getTtsModelRequest(modelId);
-    const runtime = getSherpaTtsRuntime();
-    // 本地并行合成：进程池按需扩展（每路一份模型驻留内存，批量结束收缩）。
-    const localConcurrency = Math.max(
-      1,
-      Math.min(3, Math.floor(Number(opts?.localConcurrency)) || 1),
+    // Resource-aware worker/thread allocation: reserve CPU and RAM for Electron,
+    // FFmpeg and the OS; ZipVoice receives a stricter per-worker memory budget.
+    const resourcePlan = resolveLocalTtsResourcePlan(
+      modelId,
+      Number(opts?.localConcurrency) || 0,
     );
+    const model = getTtsModelRequest(modelId, resourcePlan.numThreads);
+    const runtime = getSherpaTtsRuntime();
+    const localConcurrency = resourcePlan.workerCount;
     runtime.setPoolSize(localConcurrency);
+    logMessage(
+      `local TTS resource plan: mode=${resourcePlan.mode}, workers=${localConcurrency}, threadsPerWorker=${resourcePlan.numThreads}, usableCores=${resourcePlan.usableCores}, model=${modelId}`,
+      'info',
+    );
 
     const runSynthesize = async (
       req: Parameters<typeof runtime.synthesize>[0],
