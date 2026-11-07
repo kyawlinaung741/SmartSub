@@ -437,6 +437,24 @@ eq(
   }
 }
 
+{
+  const derived = deriveComposeConfig({
+    file: {
+      filePath: '/v/ep6.mp4',
+      fileExtension: '.mp4',
+      translatedSrtFile: '/v/ep6.my.srt',
+    } as any,
+    compose: { subtitle: 'soft', recapMode: true },
+    style: STYLE,
+    exists: existsIn(['/v/ep6.my.srt']),
+  });
+  eq(derived.ok, true, 'Recap soft subtitle: 可行');
+  if (derived.ok) {
+    eq(derived.config.subtitle.mode, 'soft', 'Recap soft subtitle: 保留可切换软字幕');
+    eq(derived.config.outputPath, '/v/ep6-final.mp4', 'Recap soft subtitle: 仍输出 MP4');
+  }
+}
+
 // ── resolveComposeRunOptions：任务快照 → 合成偏好 → 默认 的三级回退 ─────────
 
 {
