@@ -38,7 +38,12 @@ export async function testTtsConnection(
   );
   try {
     const result = await synthesizeSegment(provider, {
-      text: provider.type === TTS_XIAOMI_MIMO ? '你好' : 'Hello',
+      text:
+        provider.type === TTS_XIAOMI_MIMO
+          ? '你好'
+          : voice.startsWith('my-MM-')
+            ? 'မင်္ဂလာပါ'
+            : 'Hello',
       voice,
       outWavPath,
       signal: AbortSignal.timeout(TEST_TIMEOUT_MS),
