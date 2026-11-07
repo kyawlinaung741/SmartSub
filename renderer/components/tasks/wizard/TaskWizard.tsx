@@ -871,7 +871,6 @@ export default function TaskWizard() {
       blurStrength: composeConfig.blurStrength ?? 18,
       outputDirectory: composeConfig.outputDirectory || '',
       recapMode: true,
-      subtitle: 'hard',
     };
   };
 
