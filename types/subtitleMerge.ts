@@ -249,6 +249,10 @@ export interface ComposeConfig {
   outputPath: string;
   subtitle: ComposeSubtitleSpec;
   audio: ComposeAudioSpec;
+  /** Normalized Recap blur regions; empty/undefined leaves the source frame untouched. */
+  blurBoxes?: Array<{ x: number; y: number; w: number; h: number }>;
+  /** Box blur radius in pixels (validated and clamped before FFmpeg construction). */
+  blurStrength?: number;
 }
 
 /** 双音轨工作流保持 MKV 容器约束，MP4 软字幕使用 mov_text。 */
