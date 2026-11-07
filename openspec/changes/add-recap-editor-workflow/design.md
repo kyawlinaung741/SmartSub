@@ -13,6 +13,8 @@ Subtitle position is stored as normalized coordinates and can be dragged directl
 - Use the existing SubtitleCanvas/VideoPreview interaction model for subtitle positioning and style.
 - Add a Recap editor preview layer for blur rectangles. Store coordinates normalized to the displayed video frame so resizing the preview does not change placement.
 - Apply blur filters to the source video before the subtitle burn-in filter. Preserve the current encoder and audio selection behavior.
+- Recap output keeps the MP4 container for both hard and soft subtitle modes. Soft subtitles are muxed as an MP4 text track when no blur regions are active; selecting blur regions forces hard subtitles because the video must be re-encoded.
+- Store the selected output directory in the task snapshot. If blank, save beside the source video; retain collision-safe naming.
 - Serialize editor data in the task payload so queued/resumed tasks use the same geometry and style.
 
 ## Safety and compatibility
