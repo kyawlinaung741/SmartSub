@@ -124,6 +124,7 @@
   "seekToCue": "Seek to this line",
   "voiceGlobal": "Global voice",
   "speakerVoicesTitle": "Speakers and voices",
+  "applyNarratorVoice": "Use one narrator voice for all speakers",
   "speakerVoicesDesc": "Choose one voice per speaker; individual lines can still override it.",
   "speakerCueStats": "{{count}} lines · {{duration}}",
   "speakerVoiceFor": "Choose a voice for {{name}}",
