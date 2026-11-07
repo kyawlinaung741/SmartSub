@@ -49,7 +49,7 @@ export default function RecapEditorPanel({
   const [drawMode, setDrawMode] = useState(false);
   const [selectedBlur, setSelectedBlur] = useState<number | null>(null);
   const patch = (value: Partial<SubtitleStyle>) => {
-    if (!disabled) onStyleChange(value);
+    if (!disabled && !softMux) onStyleChange(value);
   };
   const removeSelected = () => {
     if (selectedBlur === null) return;
@@ -160,7 +160,7 @@ export default function RecapEditorPanel({
         </label>
         <Field label={`Blur strength: ${blurStrength}`}>
           <input type="range" min="1" max="50" value={blurStrength}
-            disabled={disabled || softMux} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
+            disabled={disabled} onChange={(event) => onBlurStrengthChange(Number(event.target.value))} />
         </Field>
       </div>
 
