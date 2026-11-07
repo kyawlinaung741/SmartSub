@@ -157,13 +157,28 @@ export default function RecapEditorPanel({
       </div>
 
       <Field label="Save final MP4 to folder (blank = source video folder)">
-        <input
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
-          value={outputDirectory}
-          disabled={disabled}
-          placeholder="C:\\Videos\\Recap"
-          onChange={(event) => onOutputDirectoryChange(event.target.value)}
-        />
+        <div className="flex min-w-0 gap-2">
+          <input
+            className="h-9 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm text-foreground"
+            value={outputDirectory}
+            disabled={disabled}
+            placeholder="Choose a destination folder"
+            onChange={(event) => onOutputDirectoryChange(event.target.value)}
+          />
+          <button
+            type="button"
+            className="h-9 shrink-0 rounded-md border border-border px-3 text-xs"
+            disabled={disabled}
+            onClick={async () => {
+              const selected = await window?.ipc?.invoke('selectOutputDirectory');
+              if (typeof selected === 'string' && selected.trim()) {
+                onOutputDirectoryChange(selected);
+              }
+            }}
+          >
+            Browse…
+          </button>
+        </div>
       </Field>
       <p className="text-xs text-muted-foreground">
         {blurBoxes.length} blur region(s). Blur is rendered before the Myanmar subtitle layer. The subtitle is burned into the final MP4 and the normal subtitle export remains available.
