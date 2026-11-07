@@ -248,21 +248,36 @@ eq(
 
 // ── 内置配方常量 ────────────────────────────────────────────────────────────
 
-eq(BUILTIN_RECIPES.length, 4, 'builtin: 4 张内置配方');
+eq(BUILTIN_RECIPES.length, 5, 'builtin: 5 张内置配方（含 Recap）');
 eq(
   BUILTIN_RECIPES.map((r) => builtinCardKey(r.id)),
-  ['pipeline', 'generateTranslate', 'generate', 'translate'],
-  'builtin: 文案键映射沿用旧卡片',
+  ['recap', 'pipeline', 'generateTranslate', 'generate', 'translate'],
+  'builtin: Recap 新增文案键且旧键顺序保持',
 );
 eq(
   BUILTIN_RECIPES.map((r) => recipeSlug(r)),
-  [null, 'generate-translate', 'generate', 'translate'],
-  'builtin: 一条龙走向导，其余直达任务页（零回归）',
+  [null, null, 'generate-translate', 'generate', 'translate'],
+  'builtin: Recap/一条龙走向导，其余直达任务页',
 );
 eq(
   BUILTIN_RECIPES[0].config?.gates,
   { subtitle: 'manual', dubbing: 'auto' },
   'builtin: 一条龙默认把关 = 字幕校对开、配音确认关',
+);
+eq(
+  {
+    goals: BUILTIN_RECIPES[0].goals,
+    sourceLanguage: BUILTIN_RECIPES[0].config?.sourceLanguage,
+    targetLanguage: BUILTIN_RECIPES[0].config?.targetLanguage,
+    subtitleOutputFormats: BUILTIN_RECIPES[0].config?.subtitleOutputFormats,
+  },
+  {
+    goals: { translate: true, dub: true, video: true },
+    sourceLanguage: 'zh',
+    targetLanguage: 'my',
+    subtitleOutputFormats: ['srt'],
+  },
+  'builtin: Recap 默认中文→缅甸语、配音成片并导出 SRT',
 );
 eq(
   BUILTIN_RECIPES.every((r) => r.builtin === true),
