@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * i18n 质量门禁：
- * 1. zh/en namespace 文件集合与 key 集合必须完全对等
+ * 1. zh/en namespace 文件集合与 key 集合必须完全对等；其他语言至少与 en key 对等
  * 2. 源码不允许新增 `t('key') || '兜底文案'` 模式（key 已保证存在，兜底只会掩盖缺键）
  * 退出码非 0 表示存在问题。
  */
@@ -57,6 +57,31 @@ for (const f of zhFiles.filter((f) => enFiles.includes(f))) {
   }
   for (const k of en) {
     if (!zh.has(k)) fail(`${f} 缺 zh key: ${k}`);
+  }
+}
+
+// ---------- 1b. Additional locales must contain every English key ---------- 
+const locales = fs
+  .readdirSync(localesDir, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .filter((locale) => !['zh', 'en'].includes(locale));
+
+for (const locale of locales) {
+  const localeFiles = listJson(locale);
+  for (const f of enFiles.filter((name) => !localeFiles.includes(name))) {
+    fail(`${locale} 缺少 namespace: ${f}`);
+  }
+  for (const f of enFiles.filter((name) => localeFiles.includes(name))) {
+    const expected = new Set(
+      flatten(JSON.parse(fs.readFileSync(path.join(localesDir, 'en', f), 'utf8'))),
+    );
+    const actual = new Set(
+      flatten(JSON.parse(fs.readFileSync(path.join(localesDir, locale, f), 'utf8'))),
+    );
+    for (const key of expected) {
+      if (!actual.has(key)) fail(`${locale}/${f} 缺少 key: ${key}`);
+    }
   }
 }
 
