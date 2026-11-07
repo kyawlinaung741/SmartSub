@@ -161,7 +161,7 @@ export function buildRecapBlurFilters(
     .filter((box) => box.w > 0 && box.h > 0);
   if (!valid.length) return [];
   const radius = Math.max(1, Math.min(50, Math.round(Number.isFinite(strength) ? strength : 18)));
-  const splitLabels = ['[base]', ...valid.map((_, i) => `[blur-src-${i}]`)].join('');
+  const splitLabels = ['[base]', ...valid.map((_, i) => `[blur_src_${i}]`)].join('');
   const graph = [`[0:v]split=${valid.length + 1}${splitLabels}`];
   let current = 'base';
   valid.forEach((box, i) => {
@@ -175,9 +175,9 @@ export function buildRecapBlurFilters(
       `trunc(iw*${x.toFixed(6)}/2)*2`,
       `trunc(ih*${y.toFixed(6)}/2)*2`,
     ].join(':');
-    graph.push(`[blur-src-${i}]crop=${crop},boxblur=${radius}:1[blur-${i}]`);
-    const next = `blur-composite-${i}`;
-    graph.push(`[${current}][blur-${i}]overlay=x=trunc(iw*${x.toFixed(6)}/2)*2:y=trunc(ih*${y.toFixed(6)}/2)*2:shortest=1[${next}]`);
+    graph.push(`[blur_src_${i}]crop=${crop},boxblur=${radius}:1[blur-${i}]`);
+    const next = `blur_composite_${i}`;
+    graph.push(`[${current}][blur-${i}]overlay=x=trunc(main_w*${x.toFixed(6)}/2)*2:y=trunc(main_h*${y.toFixed(6)}/2)*2:shortest=1[${next}]`);
     current = next;
   });
   const tail = tailFilters.filter(Boolean).join(',');
