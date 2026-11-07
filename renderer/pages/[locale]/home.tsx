@@ -88,6 +88,12 @@ interface RecipeVisual {
 
 /** 内置配方卡的视觉映射（沿用旧卡片配色，深链习惯不破坏） */
 const BUILTIN_VISUALS: Record<string, RecipeVisual> = {
+  'builtin-recap': {
+    icon: Clapperboard,
+    chip: 'bg-gradient-to-br from-cyan-500/20 via-cyan-500/10 to-transparent ring-1 ring-inset ring-cyan-500/20 text-cyan-600 dark:text-cyan-400',
+    decor: 'text-cyan-500/[0.09] dark:text-cyan-400/[0.12]',
+    featured: true,
+  },
   'builtin-pipeline': {
     icon: Clapperboard,
     chip: 'bg-gradient-to-br from-fuchsia-500/20 via-fuchsia-500/10 to-transparent ring-1 ring-inset ring-fuchsia-500/20 text-fuchsia-600 dark:text-fuchsia-400',
