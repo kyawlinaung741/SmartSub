@@ -69,3 +69,39 @@ it('keeps numeric position edits using the document anchor and disables manipula
   rerender(<SubtitleCanvas {...props} disabled />);
   expect(queryByRole('button')).toBeNull();
 });
+
+it('supports pointer dragging of the subtitle in the video preview', () => {
+  HTMLElement.prototype.setPointerCapture = jest.fn();
+  HTMLElement.prototype.releasePointerCapture = jest.fn();
+  const onUpdateStyle = jest.fn();
+  const onPreview = jest.fn();
+  const props = {
+    style: getDefaultStyle(),
+    text: 'မြန်မာစာတန်း',
+    width: 640,
+    height: 400,
+    safeArea: 'none' as const,
+    disabled: false,
+    onUpdateStyle,
+    onPreview,
+  };
+  const { getByRole } = render(<SubtitleCanvas {...props} />);
+  const dragHandle = getByRole('button');
+  fireEvent.pointerDown(dragHandle, {
+    pointerId: 7,
+    button: 0,
+    clientY: 200,
+  });
+  fireEvent.pointerMove(dragHandle, {
+    pointerId: 7,
+    clientY: 240,
+  });
+  expect(onPreview).toHaveBeenLastCalledWith(
+    expect.objectContaining({ positionY: 60 }),
+  );
+  fireEvent.pointerUp(dragHandle, { pointerId: 7, clientY: 240 });
+  expect(onUpdateStyle).toHaveBeenLastCalledWith({
+    positionY: 60,
+    positionReferenceY: undefined,
+  });
+});
