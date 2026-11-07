@@ -98,6 +98,7 @@ import {
   ComposeSettings,
   ReviewSettings,
 } from '../settings/PipelineSettings';
+import RecapEditorPanel from './RecapEditorPanel';
 import {
   dubbingConfigFromSelection,
   dubbingEngineKey,
@@ -841,6 +842,7 @@ export default function TaskWizard() {
   const [composeConfig, setComposeConfig] = useState<PipelineComposeConfig>(
     () => initialComposeConfig(tMerge),
   );
+  const isRecapRecipe = router.query.recipe === 'builtin-recap';
   const composeOptions = useComposeOptions(videoOn);
   const composeSubtitle = composeConfig.subtitle;
   const composeStyleId = composeConfig.styleId || '';
@@ -860,8 +862,16 @@ export default function TaskWizard() {
   const updateCompose = (next: PipelineComposeConfig) => {
     setComposeConfig(next);
   };
-  const buildComposePayload = () =>
-    withComposeDefaults(composeConfig, composeOptions.preferences);
+  const buildComposePayload = () => {
+    const resolved = withComposeDefaults(composeConfig, composeOptions.preferences);
+    if (!isRecapRecipe) return resolved;
+    return {
+      ...resolved,
+      blurBoxes: composeConfig.blurBoxes || [],
+      blurStrength: composeConfig.blurStrength ?? 18,
+      outputDirectory: composeConfig.outputDirectory || '',
+    };
+  };
 
   // ── 人工把关（下游有成本型阶段时显示；字幕校对默认开，配音确认默认关）────
   const gatesVisible = dubOn || videoOn;
@@ -2342,6 +2352,36 @@ export default function TaskWizard() {
               translateContent={formData?.translateContent}
               disabled={starting}
             />
+            {isRecapRecipe && mediaFiles.length > 0 && (
+              <div className="mt-4 border-t border-border pt-4">
+                <RecapEditorPanel
+                  videoPath={mediaFiles[0]?.filePath || null}
+                  style={composeConfig.style || initialComposeConfig(tMerge).style!}
+                  blurBoxes={composeConfig.blurBoxes || []}
+                  blurStrength={composeConfig.blurStrength ?? 18}
+                  outputDirectory={composeConfig.outputDirectory || ''}
+                  disabled={starting}
+                  onStyleChange={(patch) =>
+                    updateCompose({
+                      ...composeConfig,
+                      style: {
+                        ...(composeConfig.style || initialComposeConfig(tMerge).style!),
+                        ...patch,
+                      },
+                    })
+                  }
+                  onBlurBoxesChange={(blurBoxes) =>
+                    updateCompose({ ...composeConfig, blurBoxes })
+                  }
+                  onBlurStrengthChange={(blurStrength) =>
+                    updateCompose({ ...composeConfig, blurStrength })
+                  }
+                  onOutputDirectoryChange={(outputDirectory) =>
+                    updateCompose({ ...composeConfig, outputDirectory })
+                  }
+                />
+              </div>
+            )}
           </div>
         </Panel>
       )}
