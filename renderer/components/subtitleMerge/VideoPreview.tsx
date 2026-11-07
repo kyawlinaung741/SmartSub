@@ -19,6 +19,7 @@ import SubtitlePreviewOverlay from './SubtitlePreviewOverlay';
 import { LIBASS_SRT_PLAYRES_Y, formatDuration } from './utils/styleUtils';
 import { useJassubPreview } from './hooks/useJassubPreview';
 import SubtitleCanvas from './SubtitleCanvas';
+import RecapBlurCanvas, { type RecapBlurBox } from './RecapBlurCanvas';
 import FontFallbackNotice from './FontFallbackNotice';
 import type { SubtitleSafeArea } from '../../../types/subtitleCanvas';
 import {
@@ -52,6 +53,11 @@ interface VideoPreviewProps {
   onOpenOutputFolder?: () => void;
   onUpdateStyle?: (update: Partial<SubtitleStyle>) => void;
   softMux?: boolean;
+  recapBlurBoxes?: RecapBlurBox[];
+  recapBlurDrawMode?: boolean;
+  recapBlurSelectedIndex?: number | null;
+  onRecapBlurSelect?: (index: number | null) => void;
+  onRecapBlurChange?: (boxes: RecapBlurBox[]) => void;
 }
 
 interface PreviewCue {
@@ -104,6 +110,11 @@ export default function VideoPreview({
   onOpenOutputFolder,
   onUpdateStyle,
   softMux = false,
+  recapBlurBoxes = [],
+  recapBlurDrawMode = false,
+  recapBlurSelectedIndex = null,
+  onRecapBlurSelect,
+  onRecapBlurChange,
 }: VideoPreviewProps) {
   const { t } = useTranslation('subtitleMerge');
   const playerRef = useRef<ReactPlayer>(null);
@@ -469,6 +480,18 @@ export default function VideoPreview({
               </div>
             )}
           </div>
+
+          {videoPath && onRecapBlurChange && onRecapBlurSelect && (
+            <RecapBlurCanvas
+              boxes={recapBlurBoxes}
+              width={box.width}
+              height={box.height}
+              drawMode={recapBlurDrawMode}
+              selectedIndex={recapBlurSelectedIndex}
+              onSelect={onRecapBlurSelect}
+              onChange={onRecapBlurChange}
+            />
+          )}
 
           {videoPath && onUpdateStyle && (
             <SubtitleCanvas
